@@ -7,18 +7,33 @@ mazo = [(a,b) for a in figuras for b in numeros]
 
 c = 0
 
+def nueva_carta(lugar):
+    global c
+    n = randint(0,(51-c))
+    if lugar == "casa":
+        casa.append(mazo[n])
+    elif lugar == "juego":
+        juego.append(mazo[n])
+    global numero
+    numero = mazo[n][1]
+    mazo.remove(mazo[n])
+    c += 1
+    return numero
+
+def sumar(numero):
+    if numero in ["J", "Q", "K"]:
+        return 10
+    elif numero == "A":
+        return 1
+    else:
+        return numero
+
 #Casa
 casa = []
 contador_casa = 0
 while c < 2:
-    n = randint(0,(51-c))
-    casa.append(mazo[n])
-    if mazo[n][1] in ["A", "J", "Q", "K"]:
-        contador_casa += 10
-    else:
-        contador_casa += int(mazo[n][1])
-    mazo.remove(mazo[n])
-    c += 1
+    nueva_carta("casa")
+    contador_casa += int(sumar(numero))
 
 print(f"El mazo de la casa tiene un {casa[0]}")
 
@@ -26,28 +41,16 @@ print(f"El mazo de la casa tiene un {casa[0]}")
 juego = []
 contador = 0
 while c < 4:
-    n = randint(0,(51-c))
-    juego.append(mazo[n])
-    if mazo[n][1] in ["A", "J", "Q", "K"]:
-       contador += 10
-    else:
-       contador += int(mazo[n][1])
-    mazo.remove(mazo[n])
-    c += 1
+    nueva_carta("juego")
+    contador += int(sumar(numero))
 
 print(f"Tu juego es: {juego}")
 continuar = input("¿Deseas continuar?(si/no): ")
 
 if continuar == "si":
     while True:
-        n = randint(0,(51-c))
-        juego.append(mazo[n])
-        if mazo[n][1] in ["A", "J", "Q", "K"]:
-            contador += 10
-        else:
-            contador += int(mazo[n][1])
-        mazo.remove(mazo[n])
-        c += 1
+        nueva_carta("juego")
+        contador += int(sumar(numero))
         if contador > 21:
             print(f"Te has pasado, tu puntaje actual es de: {contador}")
             break
@@ -60,15 +63,8 @@ if continuar == "si":
 if continuar != "si":
     while True:
         if contador_casa < contador:
-            n = randint(0,(51-c))
-            casa.append(mazo[n])
-            if mazo[n][1] in ["A", "J", "Q", "K"]:
-                contador_casa += 10
-            else:
-                contador_casa += int(mazo[n][1])
-            print(mazo[n])
-            mazo.remove(mazo[n])
-            c += 1
+            nueva_carta("casa")
+            contador_casa += int(sumar(numero))
         elif contador_casa > 21:
             print(f"Le has ganado a la casa, esta tiene un puntaje de {contador_casa} y tu tienes un puntaje de {contador}")
             break
